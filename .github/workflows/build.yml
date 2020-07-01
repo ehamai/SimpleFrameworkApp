@@ -1,6 +1,5 @@
 name: Build and Deploy
 
-
 on:
   push:
     branches:
@@ -22,17 +21,11 @@ jobs:
     - name: Restore NuGet packages
       run: nuget restore 
 
-    - name: Build
+    - name: Build with MSBuild
       run: msbuild
 
     - name: Publish to folder
       run: msbuild /p:Configuration=Release /p:DeployOnBuild=true /t:WebPublish /p:WebPublishMethod=FileSystem /p:publishUrl=./published/ /p:PackageAsSingleFile=false
-    
-    - run: ls
-      
-    - run: |
-        cd published
-        ls
 
     - name: Deploy to Azure WebApp
       uses: azure/webapps-deploy@v1
@@ -40,9 +33,3 @@ jobs:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         package: ./published/
-
-    - name: Publish artifacts
-      uses: actions/upload-artifact@v1.0.0
-      with:
-        name: webapp
-        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
