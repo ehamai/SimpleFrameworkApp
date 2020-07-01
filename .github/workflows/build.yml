@@ -27,8 +27,12 @@ jobs:
 
     - name: Publish to folder
       run: msbuild /p:Configuration=Release /p:DeployOnBuild=true /t:WebPublish /p:WebPublishMethod=FileSystem /p:publishUrl=./published/ /p:PackageAsSingleFile=false
-
-    - run: ls -a
+    
+    - run: ls
+      
+    - run: |
+        cd published
+        ls
 
     - name: Deploy to Azure WebApp
       uses: azure/webapps-deploy@v1
